@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthControllerAPI;
+use App\Http\Controllers\API\ChefControllerAPI;
 use App\Http\Controllers\API\NotificationControllerAPI;
 use App\Http\Controllers\API\NotificationSettingControllerAPI;
 use Illuminate\Http\Request;
@@ -40,5 +41,14 @@ Route::middleware(['app_user_middleware'])->group(function () {
             Route::get('/fetch' ,[ NotificationSettingControllerAPI::class, 'getNotificationSettings']);
             Route::post('/update' ,[ NotificationSettingControllerAPI::class, 'updateNotifications']);
         });
+    });
+
+    // Chef
+    Route::group(['prefix'=>'chefs'], function(){
+        Route::post('/create', [ChefControllerAPI::class, 'createChef']);
+        Route::get('/get-all', [ChefControllerAPI::class, 'getAllChefs']);
+        Route::get('/get-by-id', [ChefControllerAPI::class, 'getChefById']);
+        Route::put('/update', [ChefControllerAPI::class, 'updateChef']);
+        Route::delete('/delete', [ChefControllerAPI::class, 'deleteChef']);      
     });
 });
