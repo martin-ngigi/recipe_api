@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthControllerAPI;
 use App\Http\Controllers\API\NotificationControllerAPI;
+use App\Http\Controllers\API\NotificationSettingControllerAPI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,9 @@ Route::get('/ping', function(){
 
 Route::group(['prefix'=>'auth'], function(){
     Route::post('/authentication', [AuthControllerAPI::class, 'authentication']);
+    Route::post('/save-device-details', [AuthControllerAPI::class, 'saveDeviceDetails'])->middleware('app_user_middleware');
+    Route::post('/save-device-fcm-token', [AuthControllerAPI::class, 'saveDeviceFCMToken'])->middleware('app_user_middleware');
+    Route::get('/country-codes' ,[ AuthControllerAPI::class, 'countryCodes']);
 });
 
 Route::middleware(['app_user_middleware'])->group(function () {
@@ -28,5 +32,13 @@ Route::middleware(['app_user_middleware'])->group(function () {
         Route::post('/send-all-notifications', [NotificationControllerAPI::class, 'sendAllNotificationsAPI']);
         Route::get('/get-user-notifications', [NotificationControllerAPI::class, 'getUserNotifications']);
         Route::get('/update-is-read', [NotificationControllerAPI::class, 'updateIsReadNotification']);
+    });
+
+    // Notification Settings
+    Route::group(['prefix'=>'settings'], function(){
+        Route::group(['prefix'=>'notifications'], function(){
+            Route::get('/fetch' ,[ NotificationSettingControllerAPI::class, 'getNotificationSettings']);
+            Route::post('/update' ,[ NotificationSettingControllerAPI::class, 'updateNotifications']);
+        });
     });
 });

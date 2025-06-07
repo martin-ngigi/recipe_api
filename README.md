@@ -10,7 +10,8 @@ php artisan make:Model AppUser -m
 php artisan make:model AllActivity -m
 php artisan make:model FirebaseKey -m 
 php artisan make:model CustomerNotification -m 
-php artisan make:model DeviceFCMToken -m      
+php artisan make:model DeviceFCMToken -m
+php artisan make:Model DeviceDetails -m
 ```
 
 ## API Controllers
