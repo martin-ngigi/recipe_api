@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthControllerAPI;
+use App\Http\Controllers\API\NotificationControllerAPI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,4 +16,17 @@ Route::get('/ping', function(){
 
 Route::group(['prefix'=>'auth'], function(){
     Route::post('/authentication', [AuthControllerAPI::class, 'authentication']);
+});
+
+Route::middleware(['app_user_middleware'])->group(function () {
+    // Notifications
+    Route::group(['prefix' => 'notifications'], function(){
+        Route::post('/send-sms', [NotificationControllerAPI::class,'sendSMS'])->name('/notifications/send-sms');
+        Route::post('/send-email', [NotificationControllerAPI::class, 'sendEmail']);
+        Route::post('/send-fcm-push-to-one-user-device', [NotificationControllerAPI::class, 'sendPushNotificationToOneUserDevice']);
+        Route::post('/send-fcm-push-to-one-user-devices', [NotificationControllerAPI::class, 'sendPushNotificationToOneUserDevices']);
+        Route::post('/send-all-notifications', [NotificationControllerAPI::class, 'sendAllNotificationsAPI']);
+        Route::get('/get-user-notifications', [NotificationControllerAPI::class, 'getUserNotifications']);
+        Route::get('/update-is-read', [NotificationControllerAPI::class, 'updateIsReadNotification']);
+    });
 });

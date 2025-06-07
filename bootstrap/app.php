@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckBearerToken;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,6 +14,16 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         //
+        //$middleware->append(CheckBearerToken::class);
+
+        $middleware->appendToGroup('app_user_middleware', [
+            CheckBearerToken::class,
+        ]);
+
+        $middleware->prependToGroup('app_user_middleware', [
+            CheckBearerToken::class,
+        ]);
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

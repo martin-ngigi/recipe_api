@@ -16,4 +16,10 @@ php artisan make:model DeviceFCMToken -m
 ## API Controllers
 ```
 php artisan make:controller API/AuthControllerAPI
+php artisan make:controller API/NotificationControllerAPI
+```
+
+## Middleware for auths
+```
+php artisan make:middleware CheckBearerToken
 ```
