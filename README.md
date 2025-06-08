@@ -30,3 +30,9 @@ php artisan make:controller API/IngredientControllerAPI
 ```
 php artisan make:middleware CheckBearerToken
 ```
+
+## Refreshing table
+- This drops all tables forcefully in the correct order and re-runs all migrations:
+```
+php artisan migrate:fresh
+```

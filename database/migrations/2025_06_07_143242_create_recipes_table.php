@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid("recipe_id")->primary()->default(Str::uuid());
             $table->string("name");
             $table->text("description");
+            $table->json("ingredients");
             $table->string("image")->nullable();
             $table->string('chef_id');
             $table->text("instructions");

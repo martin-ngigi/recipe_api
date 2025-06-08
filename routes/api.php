@@ -4,6 +4,7 @@ use App\Http\Controllers\API\AuthControllerAPI;
 use App\Http\Controllers\API\ChefControllerAPI;
 use App\Http\Controllers\API\NotificationControllerAPI;
 use App\Http\Controllers\API\NotificationSettingControllerAPI;
+use App\Http\Controllers\API\RecipeControllerAPI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,12 +44,28 @@ Route::middleware(['app_user_middleware'])->group(function () {
         });
     });
 
-    // Chef
+    // Protected Chefs
     Route::group(['prefix'=>'chefs'], function(){
         Route::post('/create', [ChefControllerAPI::class, 'createChef']);
-        Route::get('/get-all', [ChefControllerAPI::class, 'getAllChefs']);
-        Route::get('/get-by-id', [ChefControllerAPI::class, 'getChefById']);
         Route::put('/update', [ChefControllerAPI::class, 'updateChef']);
         Route::delete('/delete', [ChefControllerAPI::class, 'deleteChef']);      
     });
+
+    // Recipes
+    Route::group(['prefix'=> 'recipes'], function(){
+        Route::post('/create', [RecipeControllerAPI::class, 'createRecipe']);
+        Route::put('/update', [RecipeControllerAPI::class, 'updateRecipe']);
+        Route::delete('/delete', [RecipeControllerAPI::class, 'deleteRecipe']);
+    });
+
+});
+
+
+Route::group(['prefix'=>'chefs'], function(){
+    Route::get('/get-all', [ChefControllerAPI::class, 'getAllChefs']);
+    Route::get('/get-by-id', [ChefControllerAPI::class, 'getChefById']);
+});
+
+Route::group(['prefix'=> 'recipes'], function(){
+    Route::get('/get-all', [RecipeControllerAPI::class, 'getAllRecipes']);
 });
