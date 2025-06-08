@@ -65,7 +65,8 @@ class RecipeControllerAPI extends Controller
 
     public function getAllRecipes(Request $request){
         try {
-            $recipes = Recipe::all();
+            $recipes = Recipe::with('chef')
+            ->get(); // Eager load the chef relationship
 
             if ($recipes->isEmpty()) {
                 return response()->json([

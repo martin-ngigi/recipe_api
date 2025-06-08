@@ -74,7 +74,9 @@ class ChefControllerAPI extends Controller
             }
 
             $chefId = $request->chef_id;
-            $chef = Chef::where( 'chef_id', $chefId)->first();
+            $chef = Chef::where( 'chef_id', $chefId)
+            ->with('recipesList')
+            ->first();
 
             if (!$chef) {
                 return response()->json([

@@ -20,4 +20,8 @@ class Recipe extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function chef() {
+        return $this->belongsTo(Chef::class, 'chef_id', 'chef_id');
+    }
 }
