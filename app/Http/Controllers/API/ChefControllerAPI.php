@@ -101,7 +101,8 @@ class ChefControllerAPI extends Controller
 
     public function getAllChefs(Request $request){
         try {
-            $chefs = Chef::all();
+            $chefs = Chef::with('recipesList')
+            ->get();
 
             if ($chefs->isEmpty()) {
                 return response()->json([
