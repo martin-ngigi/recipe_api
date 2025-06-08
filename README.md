@@ -15,6 +15,7 @@ php artisan make:Model DeviceDetails -m
 php artisan make:Model Chef -m
 php artisan make:Model Recipe -m
 php artisan make:Model Ingredient -m
+php artisan make:Model ChefRate -m
 ```
 
 ## API Controllers

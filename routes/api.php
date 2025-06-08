@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthControllerAPI;
 use App\Http\Controllers\API\ChefControllerAPI;
+use App\Http\Controllers\API\ChefRateControllerAPI;
 use App\Http\Controllers\API\NotificationControllerAPI;
 use App\Http\Controllers\API\NotificationSettingControllerAPI;
 use App\Http\Controllers\API\RecipeControllerAPI;
@@ -56,6 +57,10 @@ Route::middleware(['app_user_middleware'])->group(function () {
         Route::post('/create', [RecipeControllerAPI::class, 'createRecipe']);
         Route::put('/update', [RecipeControllerAPI::class, 'updateRecipe']);
         Route::delete('/delete', [RecipeControllerAPI::class, 'deleteRecipe']);
+    });
+
+    Route::group(['prefix'=> 'chef-rates'], function(){
+        Route::post('/create-update', [ChefRateControllerAPI::class, 'createUpdateChefRate']);
     });
 
 });

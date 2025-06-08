@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('customer_notifications', function (Blueprint $table) {
             //$table->id();
-            $table->uuid("notification_id")->primary()->default(Str::uuid());
+            $table->uuid("notification_id")->primary();
             $table->string('open_id');
 
             $table->string('title');

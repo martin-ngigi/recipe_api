@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->unique();
             $table->string('avatar')->default("/images/profile/chef.png");
+            $table->double("rating")->default(0.0);
+            $table->integer('total_ratings')->default(0);
             $table->timestamps();
         });
     }

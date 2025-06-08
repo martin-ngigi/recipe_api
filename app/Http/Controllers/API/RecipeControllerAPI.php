@@ -7,6 +7,7 @@ use App\Models\Recipe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class RecipeControllerAPI extends Controller
 {
@@ -30,6 +31,7 @@ class RecipeControllerAPI extends Controller
             }
 
             $data = [
+                'recipe_id' => Str::uuid(), // Optional, if you want to allow custom IDs
                 'name'=> $request->name,
                 'description'=> $request->description,
                 'ingredients'=> json_encode($request->ingredients), // Assuming ingredients is an array
@@ -66,6 +68,7 @@ class RecipeControllerAPI extends Controller
     public function getAllRecipes(Request $request){
         try {
             $recipes = Recipe::with('chef')
+           // ->with('chef.getChefRateAttribute') // Eager load the chefRate relationship
             ->get(); // Eager load the chef relationship
 
             if ($recipes->isEmpty()) {

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class AppUser extends Model
 {
@@ -29,4 +30,15 @@ class AppUser extends Model
         'created_at',
         'updated_at',
     ];
+
+    //  protected static function boot()
+    // {
+    //     parent::boot();
+
+    //     static::creating(function ($model) {
+    //         if (empty($model->user_id)) {
+    //             $model->user_id = (string) Str::uuid();
+    //         }
+    //     });
+    // }
 }

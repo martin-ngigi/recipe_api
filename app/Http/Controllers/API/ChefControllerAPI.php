@@ -7,6 +7,7 @@ use App\Models\Chef;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ChefControllerAPI extends Controller
 {
@@ -28,6 +29,7 @@ class ChefControllerAPI extends Controller
             }
 
             $data = [
+                'chef_id' => Str::uuid(),
                 'name'=> $request->name,
                 'email'=> $request->email,
                 'phone'=> $request->phone,
@@ -76,6 +78,7 @@ class ChefControllerAPI extends Controller
             $chefId = $request->chef_id;
             $chef = Chef::where( 'chef_id', $chefId)
             ->with('recipesList')
+            ->with('chefRateList')
             ->first();
 
             if (!$chef) {
@@ -104,6 +107,8 @@ class ChefControllerAPI extends Controller
     public function getAllChefs(Request $request){
         try {
             $chefs = Chef::with('recipesList')
+            ->with('chefRateList')
+            ->with('chefRateList.rater')
             ->get();
 
             if ($chefs->isEmpty()) {
