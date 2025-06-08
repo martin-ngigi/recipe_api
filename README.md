@@ -25,6 +25,7 @@ php artisan make:controller API/NotificationControllerAPI
 php artisan make:controller API/ChefControllerAPI
 php artisan make:controller API/RecipeControllerAPI
 php artisan make:controller API/IngredientControllerAPI
+php artisan make:controller API/HomeControllerAPI
 ```
 
 ## Middleware for auths

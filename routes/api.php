@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\AuthControllerAPI;
 use App\Http\Controllers\API\ChefControllerAPI;
 use App\Http\Controllers\API\ChefRateControllerAPI;
+use App\Http\Controllers\API\HomeControllerAPI;
 use App\Http\Controllers\API\NotificationControllerAPI;
 use App\Http\Controllers\API\NotificationSettingControllerAPI;
 use App\Http\Controllers\API\RecipeControllerAPI;
@@ -65,6 +66,9 @@ Route::middleware(['app_user_middleware'])->group(function () {
 
 });
 
+Route::group(['prefix'=>'home'], function(){
+    Route::get('/', [HomeControllerAPI::class, 'fetchHomeData']);
+});
 
 Route::group(['prefix'=>'chefs'], function(){
     Route::get('/get-all', [ChefControllerAPI::class, 'getAllChefs']);
