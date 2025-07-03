@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid("recipe_id")->primary()->default(Str::uuid());
             $table->string("name");
             $table->text("description");
-            $table->json("ingredients");
+            //$table->json("ingredients");
             $table->string("image")->nullable();
             $table->string('chef_id');
             $table->text("instructions");
@@ -27,11 +27,6 @@ return new class extends Migration
             ->on("chefs") // this is the table name
             ->onDelete("cascade"); // This line sets up cascade deletion
 
-            /*
-               $table->foreignId('chef_id')
-                ->constrained('chefs', 'chef_id')
-                ->onDelete('cascade'); // This line sets up cascade deletion
-            */
         });
     }
 

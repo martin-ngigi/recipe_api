@@ -8,6 +8,7 @@ use App\Http\Controllers\API\NotificationControllerAPI;
 use App\Http\Controllers\API\NotificationSettingControllerAPI;
 use App\Http\Controllers\API\RecipeControllerAPI;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
@@ -77,4 +78,27 @@ Route::group(['prefix'=>'chefs'], function(){
 
 Route::group(['prefix'=> 'recipes'], function(){
     Route::get('/get-all', [RecipeControllerAPI::class, 'getAllRecipes']);
+});
+
+
+Route::fallback(function (Request $request) {
+    return response()->json([
+        'message' => 'Not Found!',
+        'url'     => $request->fullUrl(),
+    ], 404);
+});
+
+Route::get('/reset', function (){
+
+    Artisan::call('optimize:clear');
+    Artisan::call('config:clear');
+    Artisan::call('route:clear');
+    Artisan::call('route:cache');
+    Artisan::call('config:cache');
+    Artisan::call('cache:clear');
+    Artisan::call('view:clear');
+
+    return response()->json([
+        "message" =>"Reset success"
+    ], 200);
 });

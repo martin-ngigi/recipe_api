@@ -13,7 +13,7 @@ class Recipe extends Model
         'recipe_id',
         'name',
         'description',
-        'ingredients',
+        //'ingredients',
         'instructions',
         'image_url',
         'chef_id',
@@ -23,5 +23,9 @@ class Recipe extends Model
 
     public function chef() {
         return $this->belongsTo(Chef::class, 'chef_id', 'chef_id');
+    }
+
+    public function ingredients_list() {
+        return $this->hasMany(Ingredient::class, 'recipe_id', 'recipe_id');
     }
 }

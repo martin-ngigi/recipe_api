@@ -38,3 +38,14 @@ php artisan make:middleware CheckBearerToken
 ```
 php artisan migrate:fresh
 ```
+
+# Exposing the Local Server globally
+- Run the server
+```
+php artisan serve --host 0.0.0.0
+```
+- Make sure your machine and the device are connected to the same router wifi
+- Then on the other device access the base url via server ip:
+- i.e.
+```
+http://192.168.1.1

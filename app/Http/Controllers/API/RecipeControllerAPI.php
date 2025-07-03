@@ -3,72 +3,96 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Ingredient;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class RecipeControllerAPI extends Controller
 {
-    //
-    public function createRecipe(Request $request){
-        try{
-            $validaor = Validator::make($request->all(), [
+
+    public function createRecipe(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
                 'name' => 'required|string',
                 'description' => 'required|string',
-                'ingredients' => 'required|array',
+                //'ingredients' => 'required|array',
+                'ingredients.*.name' => 'required|string',
+                'ingredients.*.image' => 'required|string',
+                'ingredients.*.quantity' => 'required|string',
                 'instructions' => 'required|string',
-                'chef_id' => 'required|exists:chefs,chef_id', // Ensure chef_id exists in chefs table
+                'chef_id' => 'required|exists:chefs,chef_id',
+                'image'=> 'required|string',
             ]);
 
-            if($validaor->fails()){
+            if ($validator->fails()) {
                 return response()->json([
                     'message' => 'Invalid data.',
                     'status_code' => 422,
-                    'error' => $validaor->errors(),
+                    'error' => $validator->errors(),
                 ], 422);
             }
 
-            $data = [
-                'recipe_id' => Str::uuid(), // Optional, if you want to allow custom IDs
-                'name'=> $request->name,
-                'description'=> $request->description,
-                'ingredients'=> json_encode($request->ingredients), // Assuming ingredients is an array
-                'instructions'=> $request->instructions,
-                'chef_id'=> $request->chef_id, // Ensure this is a valid chef_id
-                'image'=> $request->image ?? null, // Optional image field
-            ];
+            DB::beginTransaction();
 
-            $recipe = Recipe::create($data);
+            $recipeId = Str::uuid()->toString();
 
-            if(!$recipe){
-                return response()->json([
-                    'message' => 'Recipe creation failed.',
-                    'error' => 'Unable to create Recipe at this time.',
-                    'status_code' => 500,
-                ], );
+            $recipe = Recipe::create([
+                'recipe_id' => $recipeId,
+                'name' => $request->name,
+                'description' => $request->description,
+                //'ingredients' => json_encode($request->ingredients), // optional if you still want to store ingredients as a string too
+                'instructions' => $request->instructions,
+                'chef_id' => $request->chef_id,
+                'image' => $request->image,
+            ]);
+
+            // Create ingredients
+            $createdIngredients = [];
+
+            foreach ($request->ingredients as $ingredient) {
+                $createdIngredients[] = Ingredient::create([
+                    'ingredient_id' => Str::uuid(),
+                    'name' => $ingredient['name'],
+                    'quantity' => $ingredient['quantity'],
+                    'image' => $ingredient['image'],
+                    'recipe_id' => $recipeId,
+                ]);
             }
 
+            DB::commit();
+
             return response()->json([
-                'message' => 'Recipe created successfully.',
-                'data' => $recipe,
+                'message' => 'Recipe and ingredients created successfully.',
+                'data' => [
+                    'recipe' => $recipe,
+                    'ingredients' => $createdIngredients,
+                ],
                 'status_code' => 201,
-            ], 201);
-        } catch(\Exception $e){
-             Log::info("Error: $e");
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Error creating recipe: " . $e->getMessage());
+
             return response()->json([
-                'message' => 'An error occurred while creating Recipe.',
+                'message' => 'An error occurred while creating the recipe.',
                 'error' => $e->getMessage(),
-                'status_code' => $e->getCode(),
-            ], 500);
-         }
+                'status_code' => 500,
+            ]);
+        }
     }
+
 
     public function getAllRecipes(Request $request){
         try {
             $recipes = Recipe::with('chef')
            // ->with('chef.getChefRateAttribute') // Eager load the chefRate relationship
+           ->with('ingredients_list') // Eager load the ingredients_list relationship
             ->get(); // Eager load the chef relationship
 
             if ($recipes->isEmpty()) {
