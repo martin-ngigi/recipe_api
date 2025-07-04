@@ -18,6 +18,7 @@ class ChefControllerAPI extends Controller
                 'name' => 'required|string',
                 'email' => 'required|email',
                 'phone' => 'required|string',
+                'avatar'=> 'required|string',
             ]);
 
             if($validaor->fails()){

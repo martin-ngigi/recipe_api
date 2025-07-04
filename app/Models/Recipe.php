@@ -15,7 +15,7 @@ class Recipe extends Model
         'description',
         //'ingredients',
         'instructions',
-        'image_url',
+        'image',
         'chef_id',
         'created_at',
         'updated_at',

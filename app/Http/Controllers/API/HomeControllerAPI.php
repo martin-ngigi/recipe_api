@@ -17,11 +17,13 @@ class HomeControllerAPI extends Controller
             // For example, fetching chefs, recipes, etc.
 
            $justForYou = Recipe::with('chef')
+                        ->with('ingredients_list')
                         ->inRandomOrder()  // fetch in random order
                         ->take(4)          // limit to 4 records
                         ->get();
 
             $trendingRecipes = Recipe::with('chef')
+                        ->with('ingredients_list')
                         ->inRandomOrder()  // fetch in random order
                         ->take(4)          // limit to 4 records
                         ->get();
