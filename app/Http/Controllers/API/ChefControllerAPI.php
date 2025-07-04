@@ -80,6 +80,7 @@ class ChefControllerAPI extends Controller
             $chef = Chef::where( 'chef_id', $chefId)
             ->with('recipesList')
             ->with('chefRateList')
+            ->with('chefRateList.rater')
             ->first();
 
             if (!$chef) {
