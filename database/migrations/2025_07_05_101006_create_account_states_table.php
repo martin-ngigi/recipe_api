@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\AccountStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+
 
 return new class extends Migration
 {
@@ -12,14 +14,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('recipes', function (Blueprint $table) {
-            $table->uuid("recipe_id")->primary()->default(Str::uuid());
-            $table->string("name");
-            $table->text("description");
-            //$table->json("ingredients");
-            $table->string("image");
+        Schema::create('account_states', function (Blueprint $table) {
+            $statuses = array_map(fn($case) => $case->value, AccountStatusEnum::cases());
+
+            $table->uuid("state_id")->primary()->default(Str::uuid());
+            $table->enum('status', $statuses)->default(AccountStatusEnum::Active->value);
+            $table->string('description')->nullable();
             $table->string('open_id');
-            $table->text("instructions");
             $table->timestamps();
 
             $table->foreign("open_id")  // open_id is defined in this table
@@ -35,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('recipes');
+        Schema::dropIfExists('account_states');
     }
 };

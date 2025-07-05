@@ -16,13 +16,13 @@ class Recipe extends Model
         //'ingredients',
         'instructions',
         'image',
-        'chef_id',
+        'open_id',
         'created_at',
         'updated_at',
     ];
 
     public function chef() {
-        return $this->belongsTo(Chef::class, 'chef_id', 'chef_id');
+        return $this->belongsTo(AppUser::class, 'open_id', 'open_id');
     }
 
     public function ingredients_list() {

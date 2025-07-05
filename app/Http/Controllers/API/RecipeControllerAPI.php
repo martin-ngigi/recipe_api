@@ -25,7 +25,7 @@ class RecipeControllerAPI extends Controller
                 'ingredients.*.image' => 'required|string',
                 'ingredients.*.quantity' => 'required|string',
                 'instructions' => 'required|string',
-                'chef_id' => 'required|exists:chefs,chef_id',
+                'open_id' => 'required|exists:app_users,open_id',
                 'image'=> 'required|string',
             ]);
 
@@ -47,7 +47,7 @@ class RecipeControllerAPI extends Controller
                 'description' => $request->description,
                 //'ingredients' => json_encode($request->ingredients), // optional if you still want to store ingredients as a string too
                 'instructions' => $request->instructions,
-                'chef_id' => $request->chef_id,
+                'open_id' => $request->open_id,
                 'image' => $request->image,
             ]);
 

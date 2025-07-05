@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\AppUser;
 use App\Models\Chef;
 use App\Models\Recipe;
+use App\Models\UserRoleEnum;
 use Illuminate\Http\Request;
 
 class HomeControllerAPI extends Controller
@@ -28,9 +30,11 @@ class HomeControllerAPI extends Controller
                         ->take(4)          // limit to 4 records
                         ->get();
 
-            $popularChefs =  Chef::with('recipesList')
-                        ->with('chefRateList')
-                        ->with('chefRateList.rater')
+            $popularChefs = AppUser::with('recipesList')
+                        ->with('allRates')
+                        ->with('allRates.rater')
+                        ->where('role', UserRoleEnum::Chef->value) // Assuming 'Chef' is the role for chefs
+                        ->whereHas('recipesList') // Ensure the chef has recipes
                         ->inRandomOrder()  // fetch in random order
                         ->take(4)          // limit to 4 records
                         ->get();

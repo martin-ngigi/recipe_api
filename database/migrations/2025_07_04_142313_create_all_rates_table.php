@@ -12,24 +12,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('chef_rates', function (Blueprint $table) {
-            $table->uuid(column: "rate_id")->primary()->default(Str::uuid());
-            $table->string("chef_id");
-            $table->string("open_id");
+        Schema::create('all_rates', function (Blueprint $table) {
+            $table->uuid("rate_id")->primary()->default(Str::uuid());
+            $table->string("ratee_id");
+            $table->string("rater_id");
             $table->double("rating")->default(0.0);
             $table->text("comment")->nullable();
             $table->timestamps();
 
             // Foreign key constraints
-            $table->foreign("chef_id")
-                ->references("chef_id")
-                ->on("chefs")
+            $table->foreign("ratee_id")
+                ->references("open_id")
+                ->on("app_users")
                 ->onDelete("cascade");
 
-            $table->foreign("open_id")
+            $table->foreign("rater_id")
                 ->references("open_id")
                 ->on("app_users") 
                 ->onDelete("cascade");
+
         });
     }
 
@@ -38,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('chef_rates');
+        Schema::dropIfExists('all_rates');
     }
 };

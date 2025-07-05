@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\API\AppStateControllerAPI;
 use App\Http\Controllers\API\AuthControllerAPI;
 use App\Http\Controllers\API\ChefControllerAPI;
-use App\Http\Controllers\API\ChefRateControllerAPI;
+use App\Http\Controllers\API\RateControllerAPI;
 use App\Http\Controllers\API\HomeControllerAPI;
 use App\Http\Controllers\API\NotificationControllerAPI;
 use App\Http\Controllers\API\NotificationSettingControllerAPI;
@@ -49,7 +50,6 @@ Route::middleware(['app_user_middleware'])->group(function () {
 
     // Protected Chefs
     Route::group(['prefix'=>'chefs'], function(){
-        Route::post('/create', [ChefControllerAPI::class, 'createChef']);
         Route::put('/update', [ChefControllerAPI::class, 'updateChef']);
         Route::delete('/delete', [ChefControllerAPI::class, 'deleteChef']);      
     });
@@ -61,8 +61,9 @@ Route::middleware(['app_user_middleware'])->group(function () {
         Route::delete('/delete', [RecipeControllerAPI::class, 'deleteRecipe']);
     });
 
-    Route::group(['prefix'=> 'chef-rates'], function(){
-        Route::post('/create-update', [ChefRateControllerAPI::class, 'createUpdateChefRate']);
+    Route::group(['prefix'=> 'rates'], function(){
+        Route::post('/create-update', [RateControllerAPI::class, 'createUpdateRate']);
+        Route::post('/get-specific-user-ratings', [RateControllerAPI::class, 'getSpecificUserRatings']);
     });
 
 });
@@ -80,6 +81,7 @@ Route::group(['prefix'=> 'recipes'], function(){
     Route::get('/get-all', [RecipeControllerAPI::class, 'getAllRecipes']);
 });
 
+Route::get('/app/get-current-app-state-and-version', [AppStateControllerAPI::class, 'getCurrentAppStateAndVersion']);
 
 Route::fallback(function (Request $request) {
     return response()->json([

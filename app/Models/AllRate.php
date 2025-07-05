@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ChefRate extends Model
+class AllRate extends Model
 {
     //
     public $incrementing = false;  // This will prevent  returning "0" when created
@@ -17,8 +17,8 @@ class ChefRate extends Model
 
     protected $fillable = [
         'rate_id',
-        'chef_id',
-        'open_id',
+        'ratee_id',
+        'rater_id',
         'rating',
         'comment',
         'created_at',
@@ -26,10 +26,10 @@ class ChefRate extends Model
     ];
 
     public function chef() {
-        return $this->belongsTo(Chef::class, 'chef_id', 'chef_id');
+        return $this->belongsTo(AppUser::class, 'chef_id', 'open_id');
     }
 
     public function rater() {
-        return $this->belongsTo(AppUser::class, 'open_id', 'open_id');
+        return $this->belongsTo(AppUser::class, 'rater_id', 'open_id');
     }
 }

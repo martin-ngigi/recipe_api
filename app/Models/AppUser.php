@@ -16,29 +16,35 @@ class AppUser extends Model
     protected $casts = [
         // 'user_id' => 'uuid',
         'user_id' => 'string',
+        'auth_type'=> AuthTypeEnum::class, // e.g. Email, Google, Apple, Facebook, Twitter, Microsoft
+        'role' => UserRoleEnum::class,
+        'gender'=> GenderEnum::class,
     ];
 
     protected $fillable = [
         'user_id',
         'name',
         'email',
-        'type',
+        'auth_type', // e.g. Email, Google, Apple, Facebook, Twitter, Microsoft
         'open_id',
         'avatar',
+        'role', // e.g. customer, chef, admin
+        'gender', // e.g. Male, Female, Other, Prefer not to say
+        'date_of_birth',
+        'phone',
+        'phone_complete', // e.g. +1234567890
+        'country_code', // e.g. +1, +44, +91
         'token',
         'access_token',
         'created_at',
         'updated_at',
     ];
 
-    //  protected static function boot()
-    // {
-    //     parent::boot();
+    public function recipesList() {
+        return $this->hasMany(Recipe::class, 'open_id', 'open_id');
+    }
 
-    //     static::creating(function ($model) {
-    //         if (empty($model->user_id)) {
-    //             $model->user_id = (string) Str::uuid();
-    //         }
-    //     });
-    // }
+    public function allRates() {
+        return $this->hasMany(AllRate::class, 'ratee_id', 'open_id');
+    }
 }

@@ -12,10 +12,13 @@ php artisan make:model FirebaseKey -m
 php artisan make:model CustomerNotification -m 
 php artisan make:model DeviceFCMToken -m
 php artisan make:Model DeviceDetails -m
-php artisan make:Model Chef -m
+php artisan make:Model AllRate -m
+php artisan make:Model TotalRate -m
 php artisan make:Model Recipe -m
 php artisan make:Model Ingredient -m
-php artisan make:Model ChefRate -m
+php artisan make:Model  AccountState -m
+php artisan make:Model  AppState -m 
+php artisan make:model AppVersion -m
 ```
 
 ## API Controllers
@@ -26,6 +29,8 @@ php artisan make:controller API/ChefControllerAPI
 php artisan make:controller API/RecipeControllerAPI
 php artisan make:controller API/IngredientControllerAPI
 php artisan make:controller API/HomeControllerAPI
+php artisan make:controller API/RateControllerAPI
+php artisan make:controller API/AppStateControllerAPI
 ```
 
 ## Middleware for auths

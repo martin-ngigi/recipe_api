@@ -3,16 +3,21 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\AccountState;
+use App\Models\AccountStatusEnum;
 use App\Models\AppUser;
+use App\Models\AuthTypeEnum;
 use App\Models\DeviceDetails;
 use App\Models\DeviceFCMToken;
 use App\Models\UserNotificationSetting;
+use App\Models\UserRoleEnum;
 use App\Traits\NotificationTrait;
 use App\Traits\TokenGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class AuthControllerAPI extends Controller
 {
@@ -26,8 +31,10 @@ class AuthControllerAPI extends Controller
             $validaor = Validator::make($request->all(), [
                 'name' => 'required|string',
                 'email' => 'required|email',
-                'type' => 'required|in:Email,Google,Apple,Facebook,Twitter',
-                'open_id' => 'required|string'
+                'auth_type' => ['required', Rule::in(array_map(fn($case) => $case->value, AuthTypeEnum::cases()))],
+                'open_id' => 'required|string',
+                //'role' => 'required|in:Customer,Chef,Admin',
+                'role' => ['required', Rule::in(array_map(fn($case) => $case->value, UserRoleEnum::cases()))],
             ]);
 
             if($validaor->fails()){
@@ -38,11 +45,14 @@ class AuthControllerAPI extends Controller
                 ], 422);
             }
 
+            //$user->role = UserRoleEnum::Admin; // Assigning enum value
+
             $userId = Str::uuid();
             $name = $request->name;
             $email = $request->email;
-            $type = $request->type;
+            $authType = $request->auth_type;
             $openId = $request->open_id;
+            $role = $request->role;
             $avatar = $request->avatar??"/images/profile/default.png";
             $token = $this->generateToken(101);
             $access_token = $this->generateToken(101);
@@ -52,7 +62,7 @@ class AuthControllerAPI extends Controller
 
             if ($user) {
                 //User exists, update the user information
-                $user->type = $type;
+                $user->auth_type = $authType;
                 $user->save();
 
                 return response()->json([
@@ -62,20 +72,26 @@ class AuthControllerAPI extends Controller
                 ], 200);
             }
 
+            $status = AccountStatusEnum::Active->value;
+            if($role != UserRoleEnum::Customer->value){
+                $status = AccountStatusEnum::PendingVerification->value;
+            }
+
             //user does not exist, create a new user
             $user = AppUser::create([
                 'user_id' => $userId,
                 'name' => $name,
                 'email'=> $email,
-                'type'=> $type,
+                'user_type'=> $authType,
                 'open_id' => $openId,
                 'avatar'=> $avatar,
+                'role'=> $role,
                 'token'=> $token,
                 'access_token' => $access_token,
             ]);
 
             // User Notification Setting
-            $userNotificationSetting = UserNotificationSetting::create([
+            UserNotificationSetting::create([
                 'id' => Str::uuid(),
                 'open_id' => $openId,
                 'email' => 'true',
@@ -83,10 +99,26 @@ class AuthControllerAPI extends Controller
                 'in_app' => 'true',
             ]);
 
+            $accountState = AccountState::create([
+                'state_id' => Str::uuid(),
+                'status' => $status,
+                'description' => "User $name has been created.",
+                'open_id' => $openId,
+            ]);
+
 
             // Send notification
-            $subject = "Welcome aboard.";
-            $body = "Welcome to Recipe App, $name!\n We're excited to have you with us. Start exploring now and enjoy exclusive recipes just for you!\n Happy cooking!";
+            $subject = "Welcome aboard $name.";
+             $body = "";
+            if ($user_type = "Chef") {
+                $body = "Welcome to Recipe App, $name!\n We're excited to have you as a Chef. Share your culinary skills and connect with food lovers around the world.\n Happy cooking!";
+            } 
+            elseif ($user_type == "Admin") {
+                $body = "Welcome to Recipe App, $name!\n We're thrilled to have you on board as an Admin. Your expertise will help us create a better experience for our users.\n Happy cooking!";
+            }
+            elseif ($user_type == " Customer") {
+                $body = "Welcome to Recipe App, $name!\n We're excited to have you with us. Start exploring now and enjoy exclusive recipes just for you!\n Happy cooking!";
+            }
 
             $openId = $user->open_id;
 
@@ -101,7 +133,8 @@ class AuthControllerAPI extends Controller
             return response()->json([
                 "message" => "Registration successful.",
                 "status_code" => 200,
-                "user" => $user
+                "user" => $user,
+                "account_state" => $accountState,
             ], 200);
 
         } catch (\Exception $e) {
@@ -114,15 +147,9 @@ class AuthControllerAPI extends Controller
         }
     }
 
-      public function saveDeviceDetails(Request $request){
+    public function saveDeviceDetails(Request $request){
         try {
 
-            /***
-             *             $table->string('localized_model');
-            $table->string('system_name');
-            $table->string('version');
-            $table->string('type');
-             */
             $validator = Validator::make($request->all(), [
                 'device_id' => 'required',
                 'name' => 'required',
@@ -196,6 +223,87 @@ class AuthControllerAPI extends Controller
                 "error" => $e->getMessage(),
                 "status_code" => $e->getCode(),
             ], 200);
+        }
+    }
+
+    public function updateAppUser(Request $request){
+        try {
+             
+            $validaor = Validator::make($request->all(), [
+                'name' => 'required|string',
+                'email' => 'required|email',
+                'auth_type' => 'required|in:Email,Google,Apple,Facebook,Twitter',
+                'open_id' => 'required|string',
+                'role' => 'required|in:Customer,Chef,Admin',
+            ]);
+
+            if($validaor->fails()){
+                return response()->json([
+                    'message' => 'Invalid data.',
+                    'status_code' => 422,
+                    'error' => $validaor->errors(),
+                ]);
+            }
+
+            //$user->role = UserRoleEnum::Admin; // Assigning enum value
+
+            $name = $request->name;
+            $email = $request->email;
+            $role = $request->role;
+            $openId = $request->open_id;
+            $role = $request->role;
+            $auth_type = $request->auth_type;
+            $avatar = $request->avatar??"/images/profile/default.png";
+            $gender = $request->gender;
+            $date_of_birth = $request->date_of_birth;
+            $phone_complete = $request->phone_complete;
+            $country_code = $request->country_code;
+            $account_status = $request->account_status;
+
+
+            //$token = $this->generateToken(101);
+            //$access_token = $this->generateToken(101);
+
+            $user = AppUser::where('open_id', $openId)
+                ->first();
+
+            if(!$user){
+                return response()->json([
+                    'message' => 'User not found.',
+                    'status_code' => 404,
+                    'error'=> 'No User found with the provided ID.',
+                ]);
+            }
+    
+
+            $user->name = $name;
+            if($user->role == UserRoleEnum::Admin){
+                $user->email = $email;
+                $user->role = $role;
+                $user->account_status = $account_status;
+            }
+            $user->avatar = $avatar;
+            $user->auth_type = $auth_type;
+            $user->gender = $gender;
+            $user->date_of_birth = $date_of_birth;
+            $user->phone_complete = $phone_complete;
+            $user->country_code = $country_code;
+
+            $user->save();
+
+            return response()->json([
+                'message' => 'User updated successfully.',
+                'status_code' => 200,
+                'user' => $user,
+            ], 200);
+
+        } catch (\Exception $e) {
+            Log::error("Error: {$e->getMessage()}");
+            return response()->json([
+                'message' => 'An error occurred while updating User.',
+                'error' => $e->getMessage(),
+                'status_code' => $e->getCode(),
+            ], 500);
         }
     }
 
