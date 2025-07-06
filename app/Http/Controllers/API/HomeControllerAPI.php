@@ -20,12 +20,14 @@ class HomeControllerAPI extends Controller
 
            $justForYou = Recipe::with('chef')
                         ->with('ingredients_list')
+                        ->with('chef.rate')
                         ->inRandomOrder()  // fetch in random order
                         ->take(4)          // limit to 4 records
                         ->get();
 
             $trendingRecipes = Recipe::with('chef')
                         ->with('ingredients_list')
+                        ->with('chef.rate')
                         ->inRandomOrder()  // fetch in random order
                         ->take(4)          // limit to 4 records
                         ->get();

@@ -34,7 +34,7 @@ class ChefControllerAPI extends Controller
             ->with('recipesList.ingredients_list')
             ->with('allRates')
             ->with('allRates.rater')
-             ->with('rate')
+            ->with('rate')
             ->first();
 
             if (!$chef) {
