@@ -33,8 +33,9 @@ class HomeControllerAPI extends Controller
             $popularChefs = AppUser::with('recipesList')
                         ->with('allRates')
                         ->with('allRates.rater')
-                        ->where('role', UserRoleEnum::Chef->value) // Assuming 'Chef' is the role for chefs
+                        ->where('role', UserRoleEnum::Chef->value) 
                         ->whereHas('recipesList') // Ensure the chef has recipes
+                        ->with('recipesList.ingredients_list')
                         ->inRandomOrder()  // fetch in random order
                         ->take(4)          // limit to 4 records
                         ->get();

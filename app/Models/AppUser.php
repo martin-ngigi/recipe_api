@@ -47,4 +47,8 @@ class AppUser extends Model
     public function allRates() {
         return $this->hasMany(AllRate::class, 'ratee_id', 'open_id');
     }
+
+     public function rate() {
+        return $this->belongsTo(TotalRate::class, 'open_id', 'open_id');
+    }
 }

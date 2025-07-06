@@ -31,9 +31,11 @@ class ChefControllerAPI extends Controller
             $chef = AppUser::where('open_id', $open_id)
             ->where('role', UserRoleEnum::Chef->value)
             ->with('recipesList')
+            ->with('recipesList.ingredients_list')
             ->with('allRates')
             ->with('allRates.rater')
-            ->get();
+             ->with('rate')
+            ->first();
 
             if (!$chef) {
                 return response()->json([
@@ -64,6 +66,7 @@ class ChefControllerAPI extends Controller
             ->where('role', 'Chef')
             ->with('allRates')
             ->with('allRates.rater')
+            ->with('rate')
             ->get();
 
             if ($chefs->isEmpty()) {

@@ -75,6 +75,7 @@ class AuthControllerAPI extends Controller
             $status = AccountStatusEnum::Active->value;
             if($role != UserRoleEnum::Customer->value){
                 $status = AccountStatusEnum::PendingVerification->value;
+                //https://img.freepik.com/free-photo/chef-cooking-kitchen-while-wearing-professional-attire_23-2151208266.jpg?semt=ais_hybrid&w=740
             }
 
             //user does not exist, create a new user
