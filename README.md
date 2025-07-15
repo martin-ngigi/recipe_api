@@ -54,3 +54,14 @@ php artisan serve --host 0.0.0.0
 - i.e.
 ```
 http://192.168.1.1
+
+## Clear cache
+```
+php artisan config:cache
+php artisan route:cache
+php artisan route:clear
+php artisan optimize --force
+php artisan cache:clear
+php artisan view:clear
+php artisan clear-compiled
+```
