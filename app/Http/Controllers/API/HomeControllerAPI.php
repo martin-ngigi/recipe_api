@@ -8,6 +8,7 @@ use App\Models\Chef;
 use App\Models\Recipe;
 use App\Models\UserRoleEnum;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class HomeControllerAPI extends Controller
 {
@@ -63,6 +64,60 @@ class HomeControllerAPI extends Controller
                 'error' => $e->getMessage(),
                 'status_code' => 500,
             ], 500);
+        }
+    }
+
+    public function searchAll(Request $request){
+        try {
+            $searchTerm = $request->searchTerm ?? "";
+            
+            if ($searchTerm == ""){
+                return response()->json([
+                    "message" => "Searching recipes success...",
+                    "status_code" =>  200,
+                    "search_response_data" => []
+                ], 200);
+            }
+    
+            $recipes = Recipe::with("chef")
+            ->orWhereHas("chef", function($query) use ($searchTerm){ // search whether chef has name like searchTerm
+                $query->where('name', 'like', '%' . $searchTerm . '%');
+            })
+            ->orWhereHas('chef', function($query) use ($searchTerm) { // search whether chef email has name like searchTerm
+                $query->where('email', 'like', '%' . $searchTerm . '%');
+            })
+            ->orWhere('name', 'like', '%' . $searchTerm . '%') //Recipe name like searchTerm 
+            ->orWhere('description', 'like', '%' . $searchTerm . '%') //Recipe description like searchTerm 
+            ->with('ingredients_list')
+            ->with('chef.rate')
+            ->get();
+
+            $chefs = AppUser::with('recipesList')
+            ->orWhere('name', 'like', '%' . $searchTerm . '%') //Recipe name like searchTerm 
+            ->orWhere('email', 'like', '%' . $searchTerm . '%')
+            ->with('allRates')
+            ->with('allRates.rater')
+            ->with('rate')
+            ->where('role', UserRoleEnum::Chef->value) 
+            ->whereHas('recipesList') // Ensure the chef has recipes
+            ->with('recipesList.ingredients_list')
+            ->get();
+
+            return response()->json([
+                "message" => "Searching recipes success.",
+                "status_code" =>  200,
+                "recipes" => $recipes,
+                "chefs" => $chefs 
+            ], 200);
+
+        }
+         catch(\Exception $e) {
+            Log::info("Error: $e");
+            return response()->json([
+                "message" => "Searching recipes failed.",
+                "error" => $e->getMessage(),
+                "status_code" => $e->getCode(),
+            ], 200);
         }
     }
 }

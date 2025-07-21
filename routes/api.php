@@ -70,6 +70,7 @@ Route::middleware(['app_user_middleware'])->group(function () {
 
 Route::group(['prefix'=>'home'], function(){
     Route::get('/', [HomeControllerAPI::class, 'fetchHomeData']);
+    Route::get('/search', [HomeControllerAPI::class, 'searchAll']);
 });
 
 Route::group(['prefix'=>'chefs'], function(){
