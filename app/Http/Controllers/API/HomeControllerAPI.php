@@ -35,6 +35,7 @@ class HomeControllerAPI extends Controller
             $popularChefs = AppUser::with('recipesList')
                         ->with('allRates')
                         ->with('allRates.rater')
+                        ->with('rate')
                         ->where('role', UserRoleEnum::Chef->value) 
                         ->whereHas('recipesList') // Ensure the chef has recipes
                         ->with('recipesList.ingredients_list')

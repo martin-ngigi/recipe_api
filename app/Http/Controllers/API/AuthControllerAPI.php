@@ -83,7 +83,7 @@ class AuthControllerAPI extends Controller
                 'user_id' => $userId,
                 'name' => $name,
                 'email'=> $email,
-                'user_type'=> $authType,
+                'auth_type'=> $authType,
                 'open_id' => $openId,
                 'avatar'=> $avatar,
                 'role'=> $role,
