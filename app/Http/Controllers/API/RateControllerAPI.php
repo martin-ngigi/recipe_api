@@ -56,14 +56,6 @@ class RateControllerAPI extends Controller
                 'comment' => $comment,
             ];
 
-            
-             // Create or update the rating
-             /*
-            $allRate = AllRate::updateOrCreate(
-                ['rater_id' => $rater_id, 'ratee_id' => $ratee_id], // Assuming user_id is available from auth
-                $allRateData
-            );
-            */
             $allRate = AllRate::create($allRateData);
 
             $totalRateData = [
@@ -78,11 +70,16 @@ class RateControllerAPI extends Controller
                 $totalRateData
             );
 
+            $ratings = AllRate::where('ratee_id', $ratee_id)
+                        ->with('rater')
+                        ->get();
+
             return response()->json([
                 'message' => 'Rating created/updated successfully.',
                 'data' => [
-                    "all_rates" => $allRate,
-                    "total_rate" => $totalRate
+                    //"submited_rate" => $allRate,
+                    "total_rate" => $totalRate,
+                    "ratings" => $ratings
                 ],
                 'status_code' => 201,
             ], 201);
@@ -111,7 +108,9 @@ class RateControllerAPI extends Controller
             }
 
             // Fetch all ratings for the specified chef
-            $ratings = AllRate::where('ratee_id', $request->ratee_id)->get();
+            $ratings = AllRate::where('ratee_id', $request->ratee_id)
+            ->with('rater') // Eager load the rater relationship
+            ->get();
 
             if($ratings->isEmpty()){
                 return response()->json([
