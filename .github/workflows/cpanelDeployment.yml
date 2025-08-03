@@ -37,9 +37,9 @@ jobs:
       - name: Deploy to CPanel via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: \${{ secrets.SERVER }}
-          username: \${{ secrets.USERNAME }}
-          password: \${{ secrets.PASSWORD }}
+          server: ${{ secrets.SERVER }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
           server-dir: /public_html/ # Adjust this if deploying to a subdirectory
           local-dir: ./ # Or ./public if only deploying built frontend
           dangerous-clean-slate: false
