@@ -23,7 +23,7 @@ jobs:
       - name: Install PHP and Composer
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1' # Adjust based on your Laravel version
+          php-version: '8.3' # Or '8.2' OR Adjust based on your Laravel version
           tools: composer
 
       - name: Install Composer dependencies
