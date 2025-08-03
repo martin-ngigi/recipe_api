@@ -40,6 +40,6 @@ jobs:
           server: ${{secrets.server}}
           username: ${{secrets.username}}
           password: ${{secrets.password}}
-          server-dir: /public_html/ # Adjust this if deploying to a subdirectory
+          server-dir: / # Adjust this if deploying to a subdirectory i.e.  /public_html/
           local-dir: ./ # Or ./public if only deploying built frontend
           dangerous-clean-slate: false
