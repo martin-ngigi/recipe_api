@@ -29,7 +29,7 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-dev --optimize-autoloader
         
-      - name: Debug FTP secrets
+      - name: Debug FTP secrets.
         run: |
           echo "SERVER: ${{ secrets.SERVER }}"
           echo "USERNAME: ${{ secrets.USERNAME }}"
