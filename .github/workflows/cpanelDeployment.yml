@@ -28,6 +28,11 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer install --no-dev --optimize-autoloader
+        
+      - name: Debug FTP secrets
+        run: |
+          echo "SERVER: ${{ secrets.SERVER }}"
+          echo "USERNAME: ${{ secrets.USERNAME }}"
 
       - name: Deploy to CPanel via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
