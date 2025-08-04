@@ -35,6 +35,21 @@ jobs:
       - name: Generate application key
         run: php artisan key:generate
 
+      - name: Set database configuration
+        run: |
+          php artisan config:clear
+          php artisan config:cache
+        env:
+          DB_CONNECTION: ${{secrets.db_connection}}
+          DB_HOST: ${{secrets.db_host}}
+          DB_PORT: ${{secrets.db_port}}
+          DB_DATABASE: ${{secrets.db_database}}
+          DB_USERNAME: ${{secrets.db_username}}
+          DB_PASSWORD: ${{secrets.db_password}}
+
+      - name: Run database migrations
+        run: php artisan migrate --force
+
       - name: Debug FTP secrets.
         run: |
           echo "SERVER: ${{ secrets.SERVER }}"
