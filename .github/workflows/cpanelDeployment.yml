@@ -73,6 +73,6 @@ jobs:
           local-dir: ./ # Or ./public if only deploying built frontend
           dangerous-clean-slate: false
 
-      - name: ✅ ✅ ✅ Congraturations!!! Deployment success ✅ ✅ ✅
+      - name: ✅ ✅ ✅ Congratulations!!! Deployment success ✅ ✅ ✅
         run: |
           echo "Deployment completed successfully!"
