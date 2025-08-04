@@ -29,6 +29,12 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-dev --optimize-autoloader
         
+      - name: Copy environment file
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+      - name: Generate application key
+        run: php artisan key:generate
+
       - name: Debug FTP secrets.
         run: |
           echo "SERVER: ${{ secrets.SERVER }}"
