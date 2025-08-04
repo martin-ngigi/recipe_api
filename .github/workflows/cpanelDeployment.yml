@@ -40,19 +40,19 @@ jobs:
           php artisan config:clear
           php artisan config:cache
         env:
-          DB_CONNECTION: ${{secrets.db_connection}}
-          DB_HOST: ${{secrets.db_host}}
-          DB_PORT: ${{secrets.db_port}}
-          DB_DATABASE: ${{secrets.db_database}}
-          DB_USERNAME: ${{secrets.db_username}}
-          DB_PASSWORD: ${{secrets.db_password}}
+          DB_CONNECTION: ${{secrets.dbconnection}}
+          DB_HOST: ${{secrets.dbhost}}
+          DB_PORT: ${{secrets.dbport}}
+          DB_DATABASE: ${{secrets.dbdatabase}}
+          DB_USERNAME: ${{secrets.dbusername}}
+          DB_PASSWORD: ${{secrets.dbpassword}}
 
       - name: Run database migrations
         run: php artisan migrate --force
 
       - name: Debug FTP secrets.
         run: |
-          echo "SERVER: ${{ secrets.SERVER }}"
+          echo "SERVER: ${{ secrets.SERVER1 }}"
           echo "USERNAME: ${{ secrets.USERNAME }}"
 
       - name: Deploy to CPanel via FTP
