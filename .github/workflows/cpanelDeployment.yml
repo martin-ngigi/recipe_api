@@ -44,19 +44,19 @@ jobs:
           php artisan optimize
           php artisan view:clear
           php artisan clear-compiled
-      #    php artisan cache:clear
+          php artisan cache:clear
 
-      # - name: Set database configuration
-      #   env:
-      #     DB_CONNECTION: ${{secrets.dbconnection}}
-      #     DB_HOST: ${{secrets.dbhost}}
-      #     DB_PORT: ${{secrets.dbport}}
-      #     DB_DATABASE: ${{secrets.dbdatabase}}
-      #     DB_USERNAME: ${{secrets.dbusername}}
-      #     DB_PASSWORD: ${{secrets.dbpassword}}
+      - name: Set database configuration
+        env:
+          DB_CONNECTION: ${{secrets.dbconnection}}
+          DB_HOST: ${{secrets.dbhost}}
+          DB_PORT: ${{secrets.dbport}}
+          DB_DATABASE: ${{secrets.dbdatabase}}
+          DB_USERNAME: ${{secrets.dbusername}}
+          DB_PASSWORD: ${{secrets.dbpassword}}
 
-      # - name: Run database migrations
-      #   run: php artisan migrate --force
+      - name: Run database migrations
+        run: php artisan migrate 
 
       - name: Debug FTP secrets.
         run: |
