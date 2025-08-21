@@ -56,12 +56,12 @@ jobs:
           DB_PASSWORD: ${{secrets.dbpassword}}
         run: echo "Database configuration environment variables set"
 
-      - name: Run database migrations
-        run: php artisan migrate 
+      # - name: Run database migrations
+      #   run: php artisan migrate 
 
       - name: Debug FTP secrets.
         run: |
-          echo "SERVER: ${{ secrets.SERVER1 }}"
+          echo "SERVER: ${{ secrets.SERVER }}"
           echo "USERNAME: ${{ secrets.USERNAME }}"
 
       - name: Deploy to CPanel via FTP
