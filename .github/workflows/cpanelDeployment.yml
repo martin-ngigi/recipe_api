@@ -54,6 +54,7 @@ jobs:
           DB_DATABASE: ${{secrets.dbdatabase}}
           DB_USERNAME: ${{secrets.dbusername}}
           DB_PASSWORD: ${{secrets.dbpassword}}
+        run: echo "Database configuration environment variables set"
 
       - name: Run database migrations
         run: php artisan migrate 
