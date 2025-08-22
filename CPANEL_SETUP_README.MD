@@ -59,3 +59,6 @@ php artisan key:generate
 php artisan migrate
 php artisan serve
 ```
+
+## NB:
+1. Make sure you run commands for clearing caches in the serve terminal so that changes can reflect. i.e. command "# 4. Clear caches:"

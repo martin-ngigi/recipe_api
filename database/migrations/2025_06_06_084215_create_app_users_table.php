@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('avatar');
             $table->enum("role", $roles)->default(UserRoleEnum::Customer->value);
             $table->enum("gender", $genders)->nullable(); 
+            $table->enum("auth_type", $authTypes);
             $table->string('date_of_birth')->nullable();
             $table->string('phone')->nullable(); 
             $table->string('phone_complete')->nullable()->unique();
