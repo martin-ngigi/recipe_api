@@ -62,3 +62,5 @@ php artisan serve
 
 ## NB:
 1. Make sure you run commands for clearing caches in the serve terminal so that changes can reflect. i.e. command "# 4. Clear caches:"
+2. Remember to update credential. Settings > Secrets and variables > Actions
+- Sample deployment video [Tutorial](https://www.youtube.com/watch?v=VRewkhslC9s&ab_channel=TechWithTea)
