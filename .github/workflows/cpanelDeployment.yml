@@ -54,8 +54,8 @@ jobs:
           php artisan optimize
           php artisan view:clear
           php artisan clear-compiled
-      #     php artisan cache:clear
-      
+          php artisan cache:clear
+
       # - name: Run database migrations
       #   run: php artisan migrate 
 
