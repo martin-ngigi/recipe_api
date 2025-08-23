@@ -46,15 +46,15 @@ jobs:
           php artisan clear-compiled
       #     php artisan cache:clear
 
-      - name: Set database configuration
-        env:
-          DB_CONNECTION: sample_db_connection # e.g., mysql, pgsql, sqlite
-          DB_HOST: ${{secrets.dbhost}}
-          DB_PORT: ${{secrets.dbport}}
-          DB_DATABASE: ${{secrets.dbdatabase}}
-          DB_USERNAME: ${{secrets.dbusername}}
-          DB_PASSWORD: ${{secrets.dbpassword}}
-        run: echo "Database configuration environment variables set"
+      - name: Update .env with DB credentials
+        run: |
+          sed -i "s/^DB_CONNECTION=.*/DB_CONNECTION=sample_db_con/" .env
+          sed -i "s/^DB_HOST=.*/DB_HOST=${{ secrets.dbhost }}/" .env
+          sed -i "s/^DB_PORT=.*/DB_PORT=${{ secrets.dbport }}/" .env
+          sed -i "s/^DB_DATABASE=.*/DB_DATABASE=${{ secrets.dbdatabase }}/" .env
+          sed -i "s/^DB_USERNAME=.*/DB_USERNAME=${{ secrets.dbusername }}/" .env
+          sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=${{ secrets.dbpassword }}/" .env
+          echo "Database configuration environment variables set"
 
       # - name: Run database migrations
       #   run: php artisan migrate 
