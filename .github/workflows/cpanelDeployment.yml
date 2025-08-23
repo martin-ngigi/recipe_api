@@ -32,6 +32,9 @@ jobs:
       # - name: Copy environment file # NB; ONE TIME SETUP
       #   run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
+      # - name: Generate application key
+      #   run: php artisan key:generate
+
       - name: Clear cache
         run: |
           php artisan config:clear
@@ -42,9 +45,6 @@ jobs:
           php artisan view:clear
           php artisan clear-compiled
       #     php artisan cache:clear
-
-      - name: Generate application key
-        run: php artisan key:generate
 
       # - name: Set database configuration
       #   env:
