@@ -65,3 +65,9 @@ php artisan cache:clear
 php artisan view:clear
 php artisan clear-compiled
 ```
+
+## Refreshing table
+- This drops all tables forcefully in the correct order and re-runs all migrations:
+```
+php artisan migrate:fresh
+```
