@@ -54,10 +54,10 @@ jobs:
           php artisan optimize
           php artisan view:clear
           php artisan clear-compiled
-          php artisan cache:clear
-
-      # - name: Run database migrations
-      #   run: php artisan migrate 
+        #   php artisan cache:clear 
+      
+      - name: Run database migrations
+        run: php artisan migrate 
 
       - name: Debug FTP secrets.
         run: |
