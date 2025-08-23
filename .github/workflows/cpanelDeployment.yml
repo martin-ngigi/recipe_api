@@ -46,15 +46,15 @@ jobs:
           php artisan clear-compiled
       #     php artisan cache:clear
 
-      # - name: Set database configuration
-      #   env:
-      #     DB_CONNECTION: ${{secrets.dbconnection}}
-      #     DB_HOST: ${{secrets.dbhost}}
-      #     DB_PORT: ${{secrets.dbport}}
-      #     DB_DATABASE: ${{secrets.dbdatabase}}
-      #     DB_USERNAME: ${{secrets.dbusername}}
-      #     DB_PASSWORD: ${{secrets.dbpassword}}
-      #   run: echo "Database configuration environment variables set"
+      - name: Set database configuration
+        env:
+          DB_CONNECTION: sample_db_connection # e.g., mysql, pgsql, sqlite
+          DB_HOST: ${{secrets.dbhost}}
+          DB_PORT: ${{secrets.dbport}}
+          DB_DATABASE: ${{secrets.dbdatabase}}
+          DB_USERNAME: ${{secrets.dbusername}}
+          DB_PASSWORD: ${{secrets.dbpassword}}
+        run: echo "Database configuration environment variables set"
 
       # - name: Run database migrations
       #   run: php artisan migrate 
