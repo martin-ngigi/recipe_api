@@ -35,17 +35,6 @@ jobs:
       - name: Generate application key
         run: php artisan key:generate
 
-      - name: Clear cache
-        run: |
-          php artisan config:clear
-          php artisan config:cache
-          php artisan route:cache
-          php artisan route:clear
-          php artisan optimize
-          php artisan view:clear
-          php artisan clear-compiled
-      #     php artisan cache:clear
-
       - name: Update .env with DB credentials. Secrets are set in the remote repo settings.
         run: |
           sed -i "s/^DB_CONNECTION=.*/DB_CONNECTION=${{ secrets.dbconnection }}/" .env
@@ -56,6 +45,17 @@ jobs:
           sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=${{ secrets.dbpassword }}/" .env
           echo "Database configuration environment variables set"
 
+      - name: Clear cache
+        run: |
+          php artisan config:clear
+          php artisan config:cache
+          php artisan route:cache
+          php artisan route:clear
+          php artisan optimize
+          php artisan view:clear
+          php artisan clear-compiled
+      #     php artisan cache:clear
+      
       # - name: Run database migrations
       #   run: php artisan migrate 
 
