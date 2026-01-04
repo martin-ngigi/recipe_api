@@ -15,11 +15,6 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Build assets
-        run: |
-          npm install
-          npm run build
-
       - name: Install PHP and Composer
         uses: shivammathur/setup-php@v2
         with:
@@ -28,22 +23,30 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer install --no-dev --optimize-autoloader
-        
+
       - name: Copy environment file # NB; Remember credentials accordingly.
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
       - name: Generate application key
         run: php artisan key:generate
 
-      - name: Update .env with DB credentials. Secrets are set in the remote repo settings.
+      - name: Publish Livewire Flux assets
+        run: php artisan vendor:publish --tag=flux-assets --force || true
+
+      - name: Build assets
         run: |
-          sed -i "s/^DB_CONNECTION=.*/DB_CONNECTION=${{ secrets.dbconnection }}/" .env
-          sed -i "s/^DB_HOST=.*/DB_HOST=${{ secrets.dbhost }}/" .env
-          sed -i "s/^DB_PORT=.*/DB_PORT=${{ secrets.dbport }}/" .env
-          sed -i "s/^DB_DATABASE=.*/DB_DATABASE=${{ secrets.dbdatabase }}/" .env
-          sed -i "s/^DB_USERNAME=.*/DB_USERNAME=${{ secrets.dbusername }}/" .env
-          sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=${{ secrets.dbpassword }}/" .env
-          echo "Database configuration environment variables set"
+          npm install
+          npm run build
+
+      # - name: Update .env with DB credentials. Secrets are set in the remote repo settings.
+      #   run: |
+      #     sed -i "s/^DB_CONNECTION=.*/DB_CONNECTION=${{ secrets.dbconnection }}/" .env
+      #     sed -i "s/^DB_HOST=.*/DB_HOST=${{ secrets.dbhost }}/" .env
+      #     sed -i "s/^DB_PORT=.*/DB_PORT=${{ secrets.dbport }}/" .env
+      #     sed -i "s/^DB_DATABASE=.*/DB_DATABASE=${{ secrets.dbdatabase }}/" .env
+      #     sed -i "s/^DB_USERNAME=.*/DB_USERNAME=${{ secrets.dbusername }}/" .env
+      #     sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=${{ secrets.dbpassword }}/" .env
+      #     echo "Database configuration environment variables set"
 
       - name: Clear cache
         run: |
@@ -55,9 +58,10 @@ jobs:
           php artisan view:clear
           php artisan clear-compiled
           php artisan cache:clear
-      
-      - name: Run database migrations
-        run: php artisan migrate 
+
+      # - name: Run database migrations
+      #   run: php artisan migrate 
+
 
       - name: Debug FTP secrets.
         run: |
@@ -67,9 +71,9 @@ jobs:
       - name: Deploy to CPanel via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{secrets.server}}
-          username: ${{secrets.username}}
-          password: ${{secrets.password}}
+          server: ${{ secrets.server }}
+          username: ${{ secrets.username }}
+          password: ${{ secrets.password }}
           server-dir: / # Adjust this if deploying to a subdirectory i.e.  /public_html/
           local-dir: ./ # Or ./public if only deploying built frontend
           dangerous-clean-slate: false
